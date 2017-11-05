@@ -4,7 +4,7 @@ pygame.init()
 
 height = 800
 width = 600
-resolution = (height, width)
+resolution = (width, height)
 
 white = (255,255,255)
 black = (0,0,0)
