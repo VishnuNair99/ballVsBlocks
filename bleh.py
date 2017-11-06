@@ -9,7 +9,7 @@ resolution = (width, height)
 white = (255,255,255)
 black = (0,0,0)
 
-FPS = 160
+FPS = 24
 
 fpsClock = pygame.time.Clock()
 
@@ -27,24 +27,37 @@ pygame.display.set_caption('Ball Vs Block')
 
 blockPos = [int(var*(width/10)) for var in range(10)]
 
+pygame.mouse.set_visible(False)
 
 class Ball:
-    pos = (0,0)
+    head_pos = 3
+    length = 10
+    list = [i for i in range(length)]
+    ball_size = 25
 
     def update(self):
-        self.pos = pygame.mouse.get_pos()
+        self.head_pos = pygame.mouse.get_pos()[0]
+        self.list.append(pygame.mouse.get_pos()[0])
+
+
 
     def draw(self):
-        screen.blit(ball, self.pos)
+        temp = int(height/2+self.ball_size)
+        screen.blit(ball, (self.head_pos, int(height/2)))
+        for var in range(2, self.length+1):
+            screen.blit(ball, (self.list[int(-1*var)], temp))
+            temp += self.ball_size
+
+
 
 
 class Block:
     Pos = []
     numBlocks = 0
     Y = 0
-    def initialize(self):
+    def initialize(self, y_coord):
         self.Pos = []
-        self.Y = 0
+        self.Y = y_coord
         self.numBlocks = random.randint(5, 8)
         while len(self.Pos) < self.numBlocks:
             temp = random.choice(blockPos)
@@ -55,13 +68,17 @@ class Block:
             screen.blit(block, (var, self.Y))
     def scroll(self):
         if self.Y >= (height-width/10):
-            self.initialize()
+            self.initialize(0)
         else:
             self.Y += 5
 
 b1 = Ball()
 w1 = Block()
-w1.initialize()
+w2 = Block()
+w3 = Block()
+w1.initialize(0)
+w2.initialize(300)
+w3.initialize(600)
 while True:
     for event in pygame.event.get():
         if event.type == QUIT:
@@ -72,5 +89,9 @@ while True:
     b1.draw()
     w1.scroll()
     w1.draw()
+    w2.scroll()
+    w2.draw()
+    w3.scroll()
+    w3.draw()
     fpsClock.tick(FPS)
     pygame.display.flip()
